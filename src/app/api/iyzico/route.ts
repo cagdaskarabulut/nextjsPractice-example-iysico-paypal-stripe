@@ -29,25 +29,38 @@ export async function POST(req: Request) {
       name: 'John',
       surname: 'Doe',
       email: 'john.doe@example.com',
+      identityNumber: '11111111111',
+      registrationAddress: 'Nişantaşı Mahallesi, İstanbul',
+      ip: req.headers.get('x-forwarded-for') || '85.34.78.112',
+      city: 'Istanbul',
+      country: 'Turkey',
+      zipCode: '34732',
     },
     billingAddress: {
       contactName: 'John Doe',
       city: 'Istanbul',
       country: 'Turkey',
+      address: 'Nişantaşı Mahallesi, İstanbul',
+      zipCode: '34732',
     },
-    basketItems: [{
-      id: 'BI101',
-      name: 'Test Product',
-      price: '100',
-      category1: 'Test',
-    }],
+    basketItems: [
+      {
+        id: 'BI101',
+        name: 'Test Product',
+        category1: 'Electronics',
+        itemType: Iyzipay.BASKET_ITEM_TYPE.PHYSICAL,
+        price: '100',
+      },
+    ],
   };
 
-  iyzipay.payment.create(paymentRequest, (err: any, result: any) => {
-    if (err) {
-      return new Response(JSON.stringify({ error: err.message }), { status: 500 });
-    } else {
-      return new Response(JSON.stringify({ message: 'Iyzico ile ödeme başarılı!' }), { status: 200 });
-    }
+  return new Promise((resolve) => {
+    iyzipay.payment.create(paymentRequest, (err: any, result: any) => {
+      if (err) {
+        resolve(new Response(JSON.stringify({ error: err.message }), { status: 500 }));
+      } else {
+        resolve(new Response(JSON.stringify({ message: 'İyzico ile ödeme başarılı!', result }), { status: 200 }));
+      }
+    });
   });
 }

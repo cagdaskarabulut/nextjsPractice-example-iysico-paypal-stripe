@@ -64,7 +64,7 @@ export default function PaymentForm() {
           <input
             type="text"
             name="expiryDate"
-            placeholder="Son Kullanma Tarihi"
+            placeholder="Son Kullanma Tarihi (MM/YY)"
             onChange={handleInputChange}
           />
           <input
@@ -78,7 +78,9 @@ export default function PaymentForm() {
 
       {paymentMethod === "paypal" && <PayPalComponent />}
 
-      <button onClick={handlePayment}>Ödeme Yap</button>
+      {paymentMethod !== "paypal" && (
+        <button onClick={handlePayment}>Ödeme Yap</button>
+      )}
     </div>
   );
 }
